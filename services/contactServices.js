@@ -1,13 +1,15 @@
 const Contact = require("../db/models/contactModel");
 
-const getAllContacts = async () => {
-  const result = await Contact.find();
-
+const getAllContacts = async (owner) => {
+  const result = await Contact.find({ owner });
+  console.log(result);
   return result;
 };
 
-const addContact = async (data) => {
-  const result = await Contact.create(data);
+const addContact = async (data, owner) => {
+  const result = await Contact.create({ ...data, owner });
+
+  console.log(result);
 
   return result;
 };

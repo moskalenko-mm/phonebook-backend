@@ -7,15 +7,16 @@ const {
 } = require("../controllers/contactsControllers");
 
 const isValidId = require("../middlewares/isValidId");
+const authenticate = require("../middlewares/authenticate");
 
 const contactValidator = require("../middlewares/validateContact");
 
 const router = express.Router();
 
-router.get("/", getAllController);
+router.get("/", authenticate, getAllController);
 
-router.post("/", contactValidator, addContactController);
+router.post("/", authenticate, contactValidator, addContactController);
 
-router.delete("/:contactId", isValidId, delContactController);
+router.delete("/:contactId", authenticate, isValidId, delContactController);
 
 module.exports = router;

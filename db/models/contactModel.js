@@ -3,13 +3,19 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const contactSchema = new Schema(
-	{
-		name: { type: String, required: true },
-		number: { type: String, required: true },
-	},
-	{ versionKey: false }
-); 
+  {
+    name: { type: String, required: true },
+    number: { type: String, required: true },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
+  },
 
-const Contact = mongoose.model('contact', contactSchema);
+  { versionKey: false }
+);
+
+const Contact = mongoose.model("contact", contactSchema);
 
 module.exports = Contact;
