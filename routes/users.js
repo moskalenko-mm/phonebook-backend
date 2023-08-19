@@ -7,9 +7,17 @@ const {
   loginController,
   logOutController,
   currentUserController,
+  updateAvatar,
 } = require("../controllers/userControllers");
 
-const { signupSchema, loginSchema, validateUser } = require("../middlewares/validateUser");
+const upload = require("../middlewares/upload");
+const isValidFile = require("../middlewares/isValidFile");
+
+const {
+  signupSchema,
+  loginSchema,
+  validateUser,
+} = require("../middlewares/validateUser");
 
 const authenticate = require("../middlewares/authenticate");
 
@@ -20,5 +28,13 @@ userRouter.post("/login", validateUser(loginSchema), loginController);
 userRouter.post("/logout", authenticate, logOutController);
 
 userRouter.get("/current", authenticate, currentUserController);
+
+userRouter.patch(
+  "/avatar",
+  authenticate,
+  upload.single("avatar"),
+  isValidFile,
+  updateAvatar
+);
 
 module.exports = userRouter;

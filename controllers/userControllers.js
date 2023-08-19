@@ -1,6 +1,8 @@
 const gravatar = require("gravatar");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
+const path = require("path");
+const fs = require("fs/promises");
 
 const User = require("../db/models/userModel");
 
@@ -82,4 +84,24 @@ const currentUserController = async (req, res) => {
   });
 };
 
-module.exports = { signupController, loginController, logOutController, currentUserController };
+const updateAvatar = async (req, res) => {
+  console.log(req.file);
+  const { path: oldPath, originalname } = req.file;
+  const { _id } = req.user;
+  const uniqName = `${_id}_${originalname}`;
+  const avatarPath = path.join(__dirname, "../", "public", "avatars");
+  const newPath = path.join(avatarPath, uniqName);
+  await fs.rename(oldPath, newPath);
+  const avatarURL = path.join("avatars", uniqName);
+
+  await User.findByIdAndUpdate(_id, { avatar: avatarURL });
+  res.json({ avatarURL });
+};
+
+module.exports = {
+  signupController,
+  loginController,
+  logOutController,
+  currentUserController,
+  updateAvatar,
+};
